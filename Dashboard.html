@@ -126,7 +126,7 @@
           <circle cx="50" cy="50" r="40" fill="var(--primary)" />
           <path d="M30,50 L70,50 M50,30 L50,70" stroke="white" stroke-width="8" />
         </svg>
-        <h5 class="mt-2">CMMS Solar</h5>
+        <h5 class="mt-2">TavernaCosplay</h5>
       </div>
       
       <nav class="nav flex-column mt-3">
@@ -137,16 +137,16 @@
           <i class='bx bx-server'></i> Activos
         </a>
         <a href="#mantenimiento" class="nav-link" onclick="showSection('mantenimiento')">
-          <i class='bx bx-calendar'></i> Planificación
+          <i class='bx bx-calendar'></i> Calendario
         </a>
         <a href="#ordenes" class="nav-link" onclick="showSection('ordenes')">
-          <i class='bx bx-task'></i> Órdenes de Trabajo
+          <i class='bx bx-task'></i> Órdenes
         </a>
         <a href="#incidencias" class="nav-link" onclick="showSection('incidencias')">
           <i class='bx bx-error-circle'></i> Incidencias
         </a>
         <a href="#accesos" class="nav-link" onclick="showSection('accesos')">
-          <i class='bx bx-key'></i> Solicitudes de Acceso
+          <i class='bx bx-key'></i> Acceso empleados
         </a>
         <a href="#informes" class="nav-link" onclick="showSection('informes')">
           <i class='bx bx-file'></i> Informes
@@ -188,7 +188,7 @@
         <div class="row">
           <div class="col-md-3">
             <div class="stats-card">
-              <h6>Total Instalaciones</h6>
+              <h6>Total Pedidos</h6>
               <h3>24</h3>
               <p class="mb-0 text-success"><i class='bx bx-up-arrow-alt'></i> 8% vs mes anterior</p>
             </div>
@@ -219,13 +219,13 @@
         <div class="row mt-4">
           <div class="col-md-8">
             <div class="chart-container">
-              <h5>Producción Solar</h5>
+              <h5>Ventas</h5>
               <canvas id="productionChart"></canvas>
             </div>
           </div>
           <div class="col-md-4">
             <div class="chart-container">
-              <h5>Estado de Mantenimientos</h5>
+              <h5>Estado</h5>
               <canvas id="maintenanceChart"></canvas>
             </div>
           </div>
@@ -241,7 +241,6 @@
                     <tr>
                       <th>ID</th>
                       <th>Tipo</th>
-                      <th>Instalación</th>
                       <th>Estado</th>
                       <th>Fecha</th>
                       <th>Responsable</th>
@@ -251,7 +250,6 @@
                     <tr>
                       <td>#1234</td>
                       <td>Mantenimiento Preventivo</td>
-                      <td>Nave Industrial A</td>
                       <td><span class="status-badge bg-success">Completado</span></td>
                       <td>2024-01-15</td>
                       <td>Juan Pérez</td>
@@ -259,7 +257,6 @@
                     <tr>
                       <td>#1235</td>
                       <td>Incidencia</td>
-                      <td>Nave Industrial B</td>
                       <td><span class="status-badge bg-warning">En Proceso</span></td>
                       <td>2024-01-16</td>
                       <td>María García</td>
