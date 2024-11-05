@@ -1,0 +1,894 @@
+<html><head><base href="." /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta charset="UTF-8" /><title>CMMS Solar - Sistema de Gestión de Mantenimiento</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    
+    <style>
+    :root {
+      --primary: #2D5BFF;
+      --secondary: #6C757D;
+      --success: #28A745;
+      --warning: #FFC107;
+      --danger: #DC3545;
+      --light: #F8F9FA;
+      --dark: #343A40;
+    }
+    
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #f4f6f9;
+    }
+    
+    .sidebar {
+      width: 250px;
+      height: 100vh;
+      position: fixed;
+      left: 0;
+      top: 0;
+      background: #fff;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      z-index: 1000;
+      transition: all 0.3s;
+    }
+    
+    .sidebar .logo {
+      padding: 20px;
+      text-align: center;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .sidebar .logo svg {
+      height: 40px;
+      width: auto;
+    }
+    
+    .nav-link {
+      padding: 12px 20px;
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      transition: all 0.3s;
+    }
+    
+    .nav-link i {
+      margin-right: 10px;
+      font-size: 1.2rem;
+    }
+    
+    .nav-link:hover {
+      background: var(--light);
+      color: var(--primary);
+    }
+    
+    .nav-link.active {
+      background: var(--primary);
+      color: white;
+    }
+    
+    .main-content {
+      margin-left: 250px;
+      padding: 20px;
+    }
+    
+    .top-bar {
+      background: #fff;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
+    .stats-card {
+      background: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      transition: transform 0.3s;
+    }
+    
+    .stats-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .chart-container {
+      background: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
+    .status-badge {
+      padding: 5px 10px;
+      border-radius: 15px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+    
+    .table th {
+      font-weight: 600;
+      background: #f8f9fa;
+    }
+    
+    .modal-content {
+      border-radius: 12px;
+    }
+    
+    </style>
+    </head>
+    <body>
+    
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="logo">
+        <svg viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="40" fill="var(--primary)" />
+          <path d="M30,50 L70,50 M50,30 L50,70" stroke="white" stroke-width="8" />
+        </svg>
+        <h5 class="mt-2">CMMS Solar</h5>
+      </div>
+      
+      <nav class="nav flex-column mt-3">
+        <a href="#dashboard" class="nav-link active" onclick="showSection('dashboard')">
+          <i class='bx bxs-dashboard'></i> Dashboard
+        </a>
+        <a href="#activos" class="nav-link" onclick="showSection('activos')">
+          <i class='bx bx-server'></i> Activos
+        </a>
+        <a href="#mantenimiento" class="nav-link" onclick="showSection('mantenimiento')">
+          <i class='bx bx-calendar'></i> Planificación
+        </a>
+        <a href="#ordenes" class="nav-link" onclick="showSection('ordenes')">
+          <i class='bx bx-task'></i> Órdenes de Trabajo
+        </a>
+        <a href="#incidencias" class="nav-link" onclick="showSection('incidencias')">
+          <i class='bx bx-error-circle'></i> Incidencias
+        </a>
+        <a href="#accesos" class="nav-link" onclick="showSection('accesos')">
+          <i class='bx bx-key'></i> Solicitudes de Acceso
+        </a>
+        <a href="#informes" class="nav-link" onclick="showSection('informes')">
+          <i class='bx bx-file'></i> Informes
+        </a>
+      </nav>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Top Bar -->
+      <div class="top-bar d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">Dashboard</h4>
+        <div class="d-flex align-items-center">
+          <div class="dropdown me-3">
+            <button class="btn btn-light dropdown-toggle" type="button" id="notificationsDropdown" data-bs-toggle="dropdown">
+              <i class='bx bx-bell'></i>
+            </button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">Nueva incidencia #123</a></li>
+              <li><a class="dropdown-item" href="#">Mantenimiento programado</a></li>
+            </ul>
+          </div>
+          <div class="dropdown">
+            <button class="btn btn-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown">
+              <i class='bx bx-user'></i>
+            </button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">Perfil</a></li>
+              <li><a class="dropdown-item" href="#">Configuración</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="#">Cerrar sesión</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    
+      <!-- Dashboard Content -->
+      <div id="dashboard" class="section active">
+        <div class="row">
+          <div class="col-md-3">
+            <div class="stats-card">
+              <h6>Total Instalaciones</h6>
+              <h3>24</h3>
+              <p class="mb-0 text-success"><i class='bx bx-up-arrow-alt'></i> 8% vs mes anterior</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="stats-card">
+              <h6>Órdenes Activas</h6>
+              <h3>12</h3>
+              <p class="mb-0 text-warning"><i class='bx bx-time'></i> 4 pendientes</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="stats-card">
+              <h6>Incidencias</h6>
+              <h3>5</h3>
+              <p class="mb-0 text-danger"><i class='bx bx-error'></i> 2 críticas</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="stats-card">
+              <h6>Rendimiento</h6>
+              <h3>96%</h3>
+              <p class="mb-0 text-success"><i class='bx bx-check'></i> Objetivo cumplido</p>
+            </div>
+          </div>
+        </div>
+    
+        <div class="row mt-4">
+          <div class="col-md-8">
+            <div class="chart-container">
+              <h5>Producción Solar</h5>
+              <canvas id="productionChart"></canvas>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="chart-container">
+              <h5>Estado de Mantenimientos</h5>
+              <canvas id="maintenanceChart"></canvas>
+            </div>
+          </div>
+        </div>
+    
+        <div class="row mt-4">
+          <div class="col-12">
+            <div class="chart-container">
+              <h5>Últimas Actividades</h5>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Tipo</th>
+                      <th>Instalación</th>
+                      <th>Estado</th>
+                      <th>Fecha</th>
+                      <th>Responsable</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>#1234</td>
+                      <td>Mantenimiento Preventivo</td>
+                      <td>Nave Industrial A</td>
+                      <td><span class="status-badge bg-success">Completado</span></td>
+                      <td>2024-01-15</td>
+                      <td>Juan Pérez</td>
+                    </tr>
+                    <tr>
+                      <td>#1235</td>
+                      <td>Incidencia</td>
+                      <td>Nave Industrial B</td>
+                      <td><span class="status-badge bg-warning">En Proceso</span></td>
+                      <td>2024-01-16</td>
+                      <td>María García</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+      <!-- Activos Section -->
+      <div id="activos" class="section d-none">
+        <div class="row">
+          <div class="col-12 mb-4">
+            <div class="top-bar d-flex justify-content-between">
+              <h4>Gestión de Activos</h4>
+              <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newAssetModal">
+                <i class='bx bx-plus'></i> Nuevo Activo
+              </button>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="chart-container">
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Nombre</th>
+                      <th>Ubicación</th>
+                      <th>Estado</th>
+                      <th>Último Mantenimiento</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>ACT-001</td>
+                      <td>Panel Solar A1</td>
+                      <td>Nave Industrial A - Sector 1</td>
+                      <td><span class="status-badge bg-success">Operativo</span></td>
+                      <td>2024-01-10</td>
+                      <td>
+                        <button class="btn btn-sm btn-primary"><i class='bx bx-edit'></i></button>
+                        <button class="btn btn-sm btn-danger"><i class='bx bx-trash'></i></button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+      <!-- Mantenimiento Section -->
+      <div id="mantenimiento" class="section d-none">
+        <div class="modal fade" id="newMaintenanceModal" tabindex="-1">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Nueva Planificación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body">
+                <form id="newMaintenanceForm">
+                  <div class="mb-3">
+                    <label class="form-label">Tipo de Mantenimiento</label>
+                    <select class="form-select" name="tipo" required>
+                      <option value="preventivo">Preventivo</option>
+                      <option value="correctivo">Correctivo</option>
+                      <option value="predictivo">Predictivo</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Instalación</label>
+                    <select class="form-select" name="instalacion" required>
+                      <option value="nave-a">Nave Industrial A</option>
+                      <option value="nave-b">Nave Industrial B</option>
+                      <option value="nave-c">Nave Industrial C</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Fecha Inicio</label>
+                    <input type="datetime-local" class="form-control" name="fechaInicio" required>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Fecha Fin</label>
+                    <input type="datetime-local" class="form-control" name="fechaFin" required>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Descripción</label>
+                    <textarea class="form-control" name="descripcion" rows="3" required></textarea>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Responsable</label>
+                    <input type="text" class="form-control" name="responsable" required>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="saveMaintenance">Guardar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 mb-4">
+            <div class="top-bar d-flex justify-content-between">
+              <h4>Planificación de Mantenimiento</h4>
+              <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newMaintenanceModal">
+                <i class='bx bx-plus'></i> Nueva Planificación
+              </button>
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="chart-container">
+              <h5>Planificación de Mantenimientos</h5>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Tipo</th>
+                      <th>Instalación</th>
+                      <th>Fecha Inicio</th>
+                      <th>Fecha Fin</th>
+                      <th>Responsable</th>
+                      <th>Estado</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody id="maintenancePlanningList">
+                    <tr>
+                      <td>MANT-001</td>
+                      <td>Preventivo</td>
+                      <td>Nave Industrial A</td>
+                      <td>2024-01-20 09:00</td>
+                      <td>2024-01-20 17:00</td>
+                      <td>Juan Pérez</td>
+                      <td><span class="status-badge bg-warning">Pendiente</span></td>
+                      <td>
+                        <button class="btn btn-sm btn-primary"><i class='bx bx-edit'></i></button>
+                        <button class="btn btn-sm btn-danger"><i class='bx bx-trash'></i></button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="chart-container">
+              <h5>Próximos Mantenimientos</h5>
+              <div class="list-group">
+                <a href="#" class="list-group-item list-group-item-action">
+                  <div class="d-flex w-100 justify-content-between">
+                    <h6 class="mb-1">Mantenimiento Preventivo</h6>
+                    <small>Mañana</small>
+                  </div>
+                  <p class="mb-1">Nave Industrial A - Sector 1</p>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+      <!-- Órdenes Section -->
+      <div id="ordenes" class="section d-none">
+        <div class="row">
+          <div class="col-12 mb-4">
+            <div class="top-bar d-flex justify-content-between">
+              <h4>Órdenes de Trabajo</h4>
+              <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newOrderModal">
+                <i class='bx bx-plus'></i> Nueva Orden
+              </button>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="chart-container">
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Tipo</th>
+                      <th>Descripción</th>
+                      <th>Prioridad</th>
+                      <th>Estado</th>
+                      <th>Asignado a</th>
+                      <th>Fecha límite</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>OT-001</td>
+                      <td>Preventivo</td>
+                      <td>Revisión general de paneles</td>
+                      <td><span class="status-badge bg-warning">Media</span></td>
+                      <td><span class="status-badge bg-primary">En progreso</span></td>
+                      <td>Juan Pérez</td>
+                      <td>2024-01-20</td>
+                      <td>
+                        <button class="btn btn-sm btn-primary"><i class='bx bx-edit'></i></button>
+                        <button class="btn btn-sm btn-success"><i class='bx bx-check'></i></button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+      <!-- Incidencias Section -->
+      <div id="incidencias" class="section d-none">
+        <div class="row">
+          <div class="col-12 mb-4">
+            <div class="top-bar d-flex justify-content-between">
+              <h4>Gestión de Incidencias</h4>
+              <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newIncidentModal">
+                <i class='bx bx-plus'></i> Nueva Incidencia
+              </button>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="chart-container">
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Tipo</th>
+                      <th>Descripción</th>
+                      <th>Severidad</th>
+                      <th>Estado</th>
+                      <th>Reportado por</th>
+                      <th>Fecha</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>INC-001</td>
+                      <td>Fallo Eléctrico</td>
+                      <td>Cortocircuito en inversor</td>
+                      <td><span class="status-badge bg-danger">Alta</span></td>
+                      <td><span class="status-badge bg-warning">En revisión</span></td>
+                      <td>María García</td>
+                      <td>2024-01-16</td>
+                      <td>
+                        <button class="btn btn-sm btn-primary"><i class='bx bx-edit'></i></button>
+                        <button class="btn btn-sm btn-success"><i class='bx bx-check'></i></button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+      <!-- Accesos Section -->
+      <div id="accesos" class="section d-none">
+        <div class="row">
+          <div class="col-12 mb-4">
+            <div class="top-bar d-flex justify-content-between">
+              <h4>Solicitudes de Acceso</h4>
+              <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newAccessModal">
+                <i class='bx bx-plus'></i> Nueva Solicitud
+              </button>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="chart-container">
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Solicitante</th>
+                      <th>Instalación</th>
+                      <th>Fecha Acceso</th>
+                      <th>Motivo</th>
+                      <th>Estado</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>ACC-001</td>
+                      <td>Carlos Ruiz</td>
+                      <td>Nave Industrial B</td>
+                      <td>2024-01-20</td>
+                      <td>Mantenimiento Preventivo</td>
+                      <td><span class="status-badge bg-warning">Pendiente</span></td>
+                      <td>
+                        <button class="btn btn-sm btn-success"><i class='bx bx-check'></i></button>
+                        <button class="btn btn-sm btn-danger"><i class='bx bx-x'></i></button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+      <!-- Informes Section -->
+      <div id="informes" class="section d-none">
+        <div class="row">
+          <div class="col-12 mb-4">
+            <div class="top-bar d-flex justify-content-between">
+              <h4>Informes y Reportes</h4>
+              <div class="btn-group">
+                <button class="btn btn-primary"><i class='bx bx-download'></i> Exportar</button>
+                <button class="btn btn-success"><i class='bx bx-printer'></i> Imprimir</button>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="chart-container">
+              <h5>Rendimiento por Instalación</h5>
+              <canvas id="performanceChart"></canvas>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="chart-container">
+              <h5>Incidencias por Tipo</h5>
+              <canvas id="incidentsChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+    </div>
+    
+    <div class="modal fade" id="newAssetModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Nuevo Activo</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <form id="newAssetForm">
+              <div class="mb-3">
+                <label class="form-label">Nombre</label>
+                <input type="text" class="form-control" name="nombre" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Ubicación</label>
+                <input type="text" class="form-control" name="ubicacion" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Estado</label>
+                <select class="form-select" name="estado">
+                  <option value="operativo">Operativo</option>
+                  <option value="mantenimiento">En Mantenimiento</option>
+                  <option value="fallo">En Fallo</option>
+                </select>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-primary">Guardar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+    // Navigation
+    function showSection(sectionId) {
+      document.querySelectorAll('.section').forEach(section => {
+        section.classList.add('d-none');
+      });
+      document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.remove('active');
+      });
+      document.getElementById(sectionId).classList.remove('d-none');
+      document.querySelector(`[href="#${sectionId}"]`).classList.add('active');
+    }
+    
+    // Charts initialization
+    document.addEventListener('DOMContentLoaded', function() {
+      // Production Chart
+      const productionChart = new Chart(
+        document.getElementById('productionChart'),
+        {
+          type: 'line',
+          data: {
+            labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+            datasets: [{
+              label: 'Producción (kWh)',
+              data: [65000, 59000, 80000, 81000, 85000, 90000],
+              borderColor: 'rgb(45, 91, 255)',
+              tension: 0.1
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                position: 'top',
+              }
+            }
+          }
+        }
+      );
+    
+      // Maintenance Chart
+      const maintenanceChart = new Chart(
+        document.getElementById('maintenanceChart'),
+        {
+          type: 'doughnut',
+          data: {
+            labels: ['Completado', 'En Proceso', 'Pendiente'],
+            datasets: [{
+              data: [65, 20, 15],
+              backgroundColor: [
+                'rgb(40, 167, 69)',
+                'rgb(255, 193, 7)',
+                'rgb(220, 53, 69)'
+              ]
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                position: 'bottom',
+              }
+            }
+          }
+        }
+      );
+    
+      // Performance Chart
+      const performanceChart = new Chart(
+        document.getElementById('performanceChart'),
+        {
+          type: 'bar',
+          data: {
+            labels: ['Nave A', 'Nave B', 'Nave C', 'Nave D'],
+            datasets: [{
+              label: 'Rendimiento (%)',
+              data: [95, 88, 92, 85],
+              backgroundColor: 'rgba(45, 91, 255, 0.7)'
+            }]
+          }
+        }
+      );
+    
+      // Incidents Chart
+      const incidentsChart = new Chart(
+        document.getElementById('incidentsChart'),
+        {
+          type: 'pie',
+          data: {
+            labels: ['Eléctricos', 'Mecánicos', 'Estructurales', 'Otros'],
+            datasets: [{
+              data: [40, 25, 20, 15],
+              backgroundColor: [
+                'rgba(220, 53, 69, 0.7)',
+                'rgba(255, 193, 7, 0.7)',
+                'rgba(40, 167, 69, 0.7)',
+                'rgba(108, 117, 125, 0.7)'
+              ]
+            }]
+          }
+        }
+      );
+    
+      // New Asset Modal Handler
+      const saveButton = document.querySelector('#newAssetModal .btn-primary');
+      saveButton.addEventListener('click', function() {
+    
+        const form = document.getElementById('newAssetForm');
+        if (!form.checkValidity()) {
+          form.reportValidity();
+          return;
+        }
+    
+        const formData = new FormData(form);
+        const assetData = {
+          nombre: formData.get('nombre'),
+          ubicacion: formData.get('ubicacion'),
+          estado: formData.get('estado')
+        };
+    
+        if (form.dataset.editId) {
+          // Update existing row
+          const row = document.querySelector(`tr[data-asset-id="${form.dataset.editId}"]`);
+          if (row) {
+            row.cells[1].textContent = assetData.nombre;
+            row.cells[2].textContent = assetData.ubicacion;
+            row.cells[3].innerHTML = `<span class="status-badge bg-${assetData.estado === 'operativo' ? 'success' : assetData.estado === 'mantenimiento' ? 'warning' : 'danger'}">${assetData.estado}</span>`;
+          }
+          delete form.dataset.editId;
+        } else {
+          // Add new row
+          const newAsset = {
+            id: 'ACT-' + Math.floor(Math.random() * 1000).toString().padStart(3, '0'),
+            ...assetData,
+            ultimoMantenimiento: new Date().toISOString().split('T')[0]
+          };
+    
+          const tbody = document.querySelector('#activos table tbody');
+          const tr = document.createElement('tr');
+          tr.setAttribute('data-asset-id', newAsset.id);
+          tr.innerHTML = `
+            <td>${newAsset.id}</td>
+            <td>${newAsset.nombre}</td>
+            <td>${newAsset.ubicacion}</td>
+            <td><span class="status-badge bg-${newAsset.estado === 'operativo' ? 'success' : newAsset.estado === 'mantenimiento' ? 'warning' : 'danger'}">${newAsset.estado}</span></td>
+            <td>${newAsset.ultimoMantenimiento}</td>
+            <td>
+              <button class="btn btn-sm btn-primary"><i class='bx bx-edit'></i></button>
+              <button class="btn btn-sm btn-danger"><i class='bx bx-trash'></i></button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        }
+    
+        const modalInstance = bootstrap.Modal.getInstance(newAssetModal);
+        modalInstance.hide();
+        form.reset();
+      });
+    
+      // Asset Actions (Edit/Delete) Handler
+      document.querySelector('#activos table tbody').addEventListener('click', function(e) {
+        const button = e.target.closest('button');
+        if (!button) return;
+        
+        const row = button.closest('tr');
+        const assetId = row.cells[0].textContent;
+        const assetName = row.cells[1].textContent;
+        const assetLocation = row.cells[2].textContent;
+        const assetStatus = row.cells[3].querySelector('.status-badge').textContent;
+    
+        if (button.classList.contains('btn-primary')) {
+          const form = document.getElementById('newAssetForm');
+          form.querySelector('[name="nombre"]').value = assetName;
+          form.querySelector('[name="ubicacion"]').value = assetLocation;
+          form.querySelector('[name="estado"]').value = assetStatus.toLowerCase();
+          form.dataset.editId = assetId;
+          
+          document.querySelector('#newAssetModal .modal-title').textContent = 'Editar Activo';
+          const modal = new bootstrap.Modal(document.getElementById('newAssetModal'));
+          modal.show();
+        } 
+        else if (button.classList.contains('btn-danger')) {
+          if (confirm(`¿Está seguro de eliminar el activo ${assetName}?`)) {
+            row.remove();
+          }
+        }
+      });
+    
+      const newAssetModal = document.getElementById('newAssetModal');
+      newAssetModal.addEventListener('hidden.bs.modal', function() {
+        const form = document.getElementById('newAssetForm');
+        form.reset();
+        delete form.dataset.editId;
+        document.querySelector('#newAssetModal .modal-title').textContent = 'Nuevo Activo';
+      });
+    
+      // Add maintenance form handler
+      document.getElementById('saveMaintenance').addEventListener('click', function() {
+        const form = document.getElementById('newMaintenanceForm');
+        if (!form.checkValidity()) {
+          form.reportValidity();
+          return;
+        }
+    
+        const formData = new FormData(form);
+        const maintenanceData = {
+          id: 'MANT-' + Math.floor(Math.random() * 1000).toString().padStart(3, '0'),
+          tipo: formData.get('tipo'),
+          instalacion: formData.get('instalacion'),
+          fechaInicio: formData.get('fechaInicio'),
+          fechaFin: formData.get('fechaFin'),
+          descripcion: formData.get('descripcion'),
+          responsable: formData.get('responsable')
+        };
+    
+        // Add new row to maintenance list
+        const tbody = document.getElementById('maintenancePlanningList');
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${maintenanceData.id}</td>
+          <td>${maintenanceData.tipo}</td>
+          <td>${maintenanceData.instalacion}</td>
+          <td>${maintenanceData.fechaInicio}</td>
+          <td>${maintenanceData.fechaFin}</td>
+          <td>${maintenanceData.responsable}</td>
+          <td><span class="status-badge bg-warning">Pendiente</span></td>
+          <td>
+            <button class="btn btn-sm btn-primary"><i class='bx bx-edit'></i></button>
+            <button class="btn btn-sm btn-danger"><i class='bx bx-trash'></i></button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+    
+        // Close modal and reset form
+        const modal = bootstrap.Modal.getInstance(document.getElementById('newMaintenanceModal'));
+        modal.hide();
+        form.reset();
+      });
+    
+      // Reset form when modal is closed
+      const newMaintenanceModal = document.getElementById('newMaintenanceModal');
+      newMaintenanceModal.addEventListener('hidden.bs.modal', function() {
+        document.getElementById('newMaintenanceForm').reset();
+      });
+    });
+    </script>
+    
+    </body>
+    </html>
