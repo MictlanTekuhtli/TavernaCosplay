@@ -1,11 +1,16 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const form = document.getElementById("contactForm");
-
-    form.addEventListener("submit", function(event) {
-        event.preventDefault();
-        const name = document.getElementById("name").value;
-        const email = document.getElementById("email").value;
-        
-        alert(`Gracias, ${name}! Nos pondremos en contacto contigo a través de ${email}.`);
+// Ejemplo para generar un gráfico usando Chart.js
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('ventasChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo'],
+            datasets: [{
+                label: 'Ventas Mensuales',
+                data: [30, 20, 50, 40, 60],
+                borderColor: '#BB4734',
+                fill: false
+            }]
+        }
     });
 });
