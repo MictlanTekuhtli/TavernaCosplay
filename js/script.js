@@ -1,15 +1,29 @@
-// Ejemplo para generar un gráfico usando Chart.js
-document.addEventListener('DOMContentLoaded', function() {
-    const ctx = document.getElementById('ventasChart').getContext('2d');
-    new Chart(ctx, {
+document.addEventListener('DOMContentLoaded', function () {
+    // Gráfica de Ventas
+    const salesChartCtx = document.getElementById('salesChart').getContext('2d');
+    new Chart(salesChartCtx, {
         type: 'line',
         data: {
-            labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo'],
+            labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
             datasets: [{
-                label: 'Ventas Mensuales',
-                data: [30, 20, 50, 40, 60],
+                label: 'Ventas ($)',
+                data: [12000, 15000, 18000, 22000, 20000, 24000],
                 borderColor: '#BB4734',
-                fill: false
+                backgroundColor: 'rgba(187, 71, 52, 0.2)',
+                tension: 0.1
+            }]
+        }
+    });
+
+    // Gráfica de Órdenes
+    const ordersChartCtx = document.getElementById('ordersChart').getContext('2d');
+    new Chart(ordersChartCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Completadas', 'En Proceso', 'Pendientes'],
+            datasets: [{
+                data: [65, 20, 15],
+                backgroundColor: ['#28A745', '#FFC107', '#DC3545']
             }]
         }
     });
