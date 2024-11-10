@@ -1,20 +1,16 @@
+/* styles.css */
 body {
-    font-family: 'Crimson Text', serif;
-    background-color: #ECE4D7;
+    font-family: Arial, sans-serif;
 }
 
 .navbar-brand {
     font-family: 'Old English', serif;
 }
 
-.jumbotron {
-    background-color: #032738;
+h1 {
+    color: #032738; /* Color principal */
 }
 
 .card {
-    border-color: #BB4734;
-}
-
-h2 {
-    color: #227596;
+    margin-bottom: 20px;
 }

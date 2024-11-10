@@ -3,37 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taberna del Cosplay - Catálogo</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="assets/bootstrap/bootstrap.min.css">
+    <title>Catálogo - Taberna del Cosplay</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <!-- Barra de navegación -->
+    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" href="#">Taberna del Cosplay</a>
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
-        </ul>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+                <li class="nav-item"><a class="nav-link" href="catalogo.html">Catálogo</a></li>
+                <li class="nav-item"><a class="nav-link" href="dashboard.html">Dashboard</a></li>
+            </ul>
+        </div>
     </nav>
 
-    <!-- Sección del Catálogo -->
-    <section class="container mt-5">
-        <h2>Catálogo de Productos</h2>
+    <!-- Catalogo Content -->
+    <div class="container mt-5">
+        <h1>Catálogo de Productos</h1>
         <div class="row">
+            <!-- Ejemplo de producto -->
             <div class="col-md-4">
                 <div class="card">
-                    <img src="img/cosplay1.jpg" class="card-img-top" alt="Cosplay 1">
+                    <img src="assets/img/producto1.jpg" class="card-img-top" alt="Producto 1">
                     <div class="card-body">
-                        <h5 class="card-title">Traje de Cosplay</h5>
-                        <p class="card-text">Cosplay personalizado a medida.</p>
-                        <button class="btn btn-primary">Comprar</button>
+                        <h5 class="card-title">Producto 1</h5>
+                        <p class="card-text">Descripción breve del producto.</p>
+                        <a href="#" class="btn btn-primary">Ver más</a>
                     </div>
                 </div>
             </div>
-            <!-- Repetir para más productos -->
         </div>
-    </section>
-
-    <script src="assets/bootstrap/bootstrap.bundle.min.js"></script>
+    </div>
 </body>
 </html>
