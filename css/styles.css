@@ -59,7 +59,7 @@ body {
 
 /* Estilos para el carrusel */
 .carousel-inner img {
-    height: 800px;
+    height: 600px;
     object-fit: cover;
 }
 
