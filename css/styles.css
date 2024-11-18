@@ -53,9 +53,8 @@ body {
 
 /* Estilos para el logo */
 .logo {
-    max-width: 200px;
-    height: auto;
-    margin-bottom: 20px;
+    height: 40px; 
+    width: auto; 
 }
 
 /* Estilos para el carrusel */
